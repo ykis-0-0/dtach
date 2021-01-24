@@ -127,6 +127,13 @@ method is used as the default redraw method for the session.
 
 6. CHANGES
 
+The changes in version 0.10 are:
+- Arguments can be terminated by --, allowing command to start with a '-'
+- Added dtach -q, which supresses additional text when exiting successfully.
+- Added dtach -R <method>, which determines how the terminal is cleared.
+- Added dtach -t, which disables VT100 assumptions.
+- Creates socket with only user permissions.
+
 The changes in version 0.9 are:
 - Added AIX support.
 - Added dtach -N, a mode similar to dtach -n, except dtach will stay in the
