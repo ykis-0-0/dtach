@@ -39,6 +39,8 @@ int redraw_method = REDRAW_UNSPEC;
 /* The default clear method. Initially set to unspecified. */
 int clear_method = CLEAR_UNSPEC;
 int quiet = 0;
+/* 1 if we should not send ansi sequences to the terminal */
+int no_ansiterm = 0;
 
 /*
 ** The original terminal settings. Shared between the master and attach
@@ -86,6 +88,7 @@ usage()
 		"\t\t     move: Move to last line (default behaviour).\n"
 		"  -z\t\tDisable processing of the suspend key.\n"
 		"  -q\t\tDisable printing of additional messages.\n"
+		"  -t\t\tDisable VT100 assumptions.\n"
 		"\nReport any bugs to <" PACKAGE_BUGREPORT ">.\n",
 		PACKAGE_VERSION, __DATE__, __TIME__);
 	exit(0);
@@ -173,6 +176,8 @@ main(int argc, char **argv)
 				no_suspend = 1;
 			else if (*p == 'q')
 				quiet = 1;
+			else if (*p == 't')
+				no_ansiterm = 1;
 			else if (*p == 'e')
 			{
 				++argv; --argc;
