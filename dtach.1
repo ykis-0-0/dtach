@@ -164,6 +164,25 @@ redraw method for the session. If not specified, the
 method is used.
 
 .TP
+.BI "\-R " "<method>"
+Sets the clear method to
+.IR <method> .
+The valid methods are
+.IR none ,
+or
+.IR move .
+
+.I none
+disables clearing completely, and
+.I move
+moves to the last line.
+
+When creating a new session, the specified method is used as the default
+clear method for the session. If not specified, the
+.I move
+method is used.
+
+.TP
 .B \-z
 Disables processing of the suspend key.
 Normally,
@@ -171,6 +190,31 @@ Normally,
 will suspend itself when the suspend key is pressed. With this option, the
 suspend character is sent to the session instead of being handled by
 .BR dtach .
+
+.TP
+.B \-q
+Disables some additional messages.
+
+.TP
+.B \-z
+Disables processing of the suspend key.
+Normally,
+.B dtach
+will suspend itself when the suspend key is pressed. With this option, the
+suspend character is sent to the session instead of being handled by
+.BR dtach .
+
+.TP
+.B \-t
+Disables VT100 assumptions.
+This effects the way
+.B dtach
+clears and restores the terminal.
+With this option,
+.B dtach
+will rely on
+.B tput
+to initialize the terminal when attaching.
 
 .PP
 .SH EXAMPLES
