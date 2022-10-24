@@ -28,6 +28,8 @@ struct pty
 #endif
 	/* Process id of the child. */
 	pid_t pid;
+	/* Exit code of the child. */
+	int exit_code;
 	/* The terminal parameters of the pty. Old and new for comparision
 	** purposes. */
 	struct termios term;
@@ -72,6 +74,14 @@ die(int sig)
 	/* Well, the child died. */
 	if (sig == SIGCHLD)
 	{
+		int status;
+
+		if (waitpid(-1, &status, WNOHANG) > 0)
+		{
+			if (WIFEXITED(status))
+				the_pty.exit_code = WEXITSTATUS(status);
+		}
+
 #ifdef BROKEN_MASTER
 		/* Damn you Solaris! */
 		close(the_pty.fd);
@@ -134,7 +144,7 @@ init_pty(char **argv, int statusfd)
 		printf("%s: could not execute %s: %s\r\n", progname,
 		       *argv, strerror(errno));
 		fflush(stdout);
-		_exit(127);
+		_exit(1);
 	}
 	/* Parent.. Finish up and return */
 #ifdef BROKEN_MASTER
@@ -257,7 +267,17 @@ pty_activity(int s)
 
 	/* Error -> die */
 	if (len <= 0)
-		exit(1);
+	{
+#ifdef EIO
+		if (len < 0 && errno == EIO)
+			len = 0;
+#endif
+
+		if (len == 0)
+			exit(the_pty.exit_code);
+		else
+			exit(1);
+	}
 
 #ifdef BROKEN_MASTER
 	/* Get the current terminal settings. */
